@@ -1,0 +1,49 @@
+# This workflow is triggered on the code updates
+# (when 1- code is pushed, 2 - pull request is (re)-opened, 3 - pull request is updated).
+# The workflow only works on main & release branches.
+
+# The workflow:
+# 1. Installs Python
+# 2. Installs dependencies
+# 3. Runs tests
+
+name: Diabetes Prediction App
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'releases/**'
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - 'main'
+      - 'releases/**'
+
+jobs:
+  # Installation job
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      # Clone repository on the linux machine
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Install Python 3.12
+      - name: Install Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      # Install Python dependencies
+      - name: Install dependencies
+        run:
+          pip install -r requirements.txt
+
+      # Run Pytest
+      - name: Run tests
+        run: pytest
