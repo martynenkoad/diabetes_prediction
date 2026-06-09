@@ -1,0 +1,23 @@
+name: Python Setup
+
+description: Setup Python and install dependencies
+
+runs:
+  using: composite
+
+  steps:
+    # Clone repository on the linux machine
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Install Python 3.12
+    - name: Install Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    # Install Python dependencies
+    - name: Install dependencies
+      shell: bash
+      run: pip install -r requirements.txt

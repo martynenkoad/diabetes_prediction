@@ -1,3 +1,5 @@
+import array
+import json
 import sys
 import time
 
@@ -60,6 +62,9 @@ if __name__ == '__main__':
 
     if '-evaluate-models' in args:
         print('Evaluating Models Stage')
+        # Initialize an object where the evaluation results will be stored
+        evaluation_results = {}
+        
         for model_name in models:
             print(f'Evaluating {model_name} model....')
             start_time = time.time()
@@ -79,5 +84,19 @@ if __name__ == '__main__':
             print(f'Confusion matrix: {results["confusion_matrix"]}')
             if '-dont-show-cm-graph' not in args:
                 conf_matrix(results['confusion_matrix'])
+
+            # Add a new entry to the evaluation_results object
+            evaluation_results[model_name] = {
+                "accuracy": results["accuracy"],
+                "precision": results["precision"],
+                "recall": results["recall"],
+                "f1": results["f1"],
+                "specificity": results["specificity"],
+            }
+
             print('The model evaluation stage has been completed in %s seconds.' % (time.time() - start_time))
             separator()
+
+        # Save the json with the evaluation results
+        with open("evaluation_results.json", "w") as f:
+            json.dump(evaluation_results, f, indent=4)

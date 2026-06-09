@@ -24,26 +24,38 @@ on:
       - 'releases/**'
 
 jobs:
-  # Installation job
-  install:
+  # Run tests job
+  tests:
     runs-on: ubuntu-latest
     steps:
-      # Clone repository on the linux machine
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Install Python 3.12
-      - name: Install Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: 'pip'
-
-      # Install Python dependencies
-      - name: Install dependencies
-        run:
-          pip install -r requirements.txt
+      # Setup Python
+      - name: Setup Python
+        uses: ./.github/actions/python-setup
 
       # Run Pytest
       - name: Run tests
         run: PYTHONPATH=. pytest
+
+  model_pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      # Setup Python
+      - name: Setup Python
+        uses: ./.github/actions/python-setup
+
+      # Train & evaluate the models
+      - name: Train & Evaluate Models
+        run: python main.py -train-models -evaluate-models -save-models -use-best-params
+
+      # Upload metrics as artifacts
+      - name: Upload Metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: metrics
+          path: evaluation_results.json
+
+      #### TODO  ####
+#      - name: Download Metrics
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: metrics
