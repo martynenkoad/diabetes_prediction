@@ -1,8 +1,8 @@
-streamlit==1.52.2
-pandas==2.3.3
-numpy==2.4.0
 matplotlib
 seaborn
+streamlit==1.41.1
+pandas==2.2.3
+numpy==2.1.3
 scikit-learn==1.6.1
-imbalanced-learn==0.14.1
-pytest
+imbalanced-learn==0.13.0
+pytest==8.3.4
