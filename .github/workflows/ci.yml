@@ -41,7 +41,7 @@ jobs:
     steps:
       # Setup Python
       - name: Setup Python
-        uses: ./.github/actions/python-setup
+        uses: ./.github/actions/python_setup
 
       # Train & evaluate the models
       - name: Train & Evaluate Models
