@@ -28,6 +28,10 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
+      # Clone repository on the linux machine
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       # Setup Python
       - name: Setup Python
         uses: ./.github/actions/python-setup
