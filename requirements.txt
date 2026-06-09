@@ -1,0 +1,8 @@
+streamlit==1.52.2
+pandas==2.3.3
+numpy==2.4.0
+matplotlib
+seaborn
+scikit-learn==1.6.1
+imbalanced-learn==0.14.1
+pytest

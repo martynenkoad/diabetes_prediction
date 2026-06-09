@@ -110,3 +110,9 @@ To not train/save the model(s), use the `-exclude-[model_name]` arg when running
 
 When the streamlit app is run, the available models are loaded automatically and are available in the selected_model dropdown.
 
+## Running the app in the Docker
+
+```
+docker build --no-cache -t diabetes-app .
+docker run -p 8501:8501 diabetes-app
+```
