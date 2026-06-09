@@ -1,4 +1,5 @@
 import pandas as pd
+from pathlib import Path
 
 def alter_smoking_column(smoking_status):
     """
@@ -13,8 +14,14 @@ def alter_smoking_column(smoking_status):
     elif smoking_status in ['ever', 'former', 'not current']:
         return 'past_smoker'
 
+DATA_PATH = (
+    Path(__file__).parent
+    / "data"
+    / "diabetes_prediction_dataset.csv"
+)
+
 # Read the original data from the .csv file
-original_diabetes_prediction_dataset = pd.read_csv('data/diabetes_prediction_dataset.csv')
+original_diabetes_prediction_dataset = pd.read_csv(DATA_PATH)
 # Remove the duplicates from the dataset
 diabetes_prediction_dataset = original_diabetes_prediction_dataset.drop_duplicates()
 # Apply the modifications to the smoking_history column
