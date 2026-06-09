@@ -53,7 +53,7 @@ jobs:
 
       # Train & evaluate the models
       - name: Train & Evaluate Models
-        run: python main.py -train-models -evaluate-models -save-models -use-best-params
+        run: python main.py -train-models -evaluate-models -use-best-params
 
       # Upload metrics as artifacts
       - name: Upload Metrics
