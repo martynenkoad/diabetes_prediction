@@ -46,4 +46,4 @@ jobs:
 
       # Run Pytest
       - name: Run tests
-        run: pytest
+        run: PYTHONPATH=. pytest
