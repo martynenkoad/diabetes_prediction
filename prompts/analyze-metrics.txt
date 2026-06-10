@@ -1,0 +1,14 @@
+You are a machine learning engineer.
+
+Analyze the following evaluation metrics and the logs extracted from the models learning process.
+
+Focus on:
+- Models quality
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- Specificity
+- Possible model overfitting
+- Model training time
+- Recommendations for improvement
