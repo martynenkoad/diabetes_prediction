@@ -28,14 +28,14 @@ def show_dataset_info():
         3. Duplicates
     :return: Nothing
     """
-    # print("Dataset information:")
+    print("Dataset information:")
     print(original_diabetes_prediction_dataset.info(show_counts=True, verbose=True))
     separator()
-    # print("Amount of null values per column:")
+    print("Amount of null values per column:")
     print(original_diabetes_prediction_dataset.isnull().sum())
     separator()
     duplicate_rows = original_diabetes_prediction_dataset[original_diabetes_prediction_dataset.duplicated()]
-    # print("Duplicate rows:", duplicate_rows.shape)
+    print("Duplicate rows:", duplicate_rows.shape)
 
 def show_columns_info():
     """
