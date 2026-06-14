@@ -192,14 +192,14 @@ jobs:
 
     if: |
       needs.tests.result == 'success' &&
-      needs.model_pipeline.result == 'success
+      needs.model_pipeline.result == 'success'
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Build Docker Image
-        run: docker build -t diabetes-prediction-app
+        run: docker build -t diabetes-prediction-app .
 
       - name: Save Docker Image
         run: docker save diabetes-prediction-app -o diabetes-prediction-app.tar
