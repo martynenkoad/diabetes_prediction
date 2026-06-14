@@ -29,7 +29,9 @@ jobs:
 
       # Run Pytest
       - name: Run Tests
-        run: PYTHONPATH=. pytest | tee tests_logs.txt
+        run: |
+          PYTHONPATH=. pytest | tee tests_logs.txt
+          exit ${PIPESTATUS[0]}
 
       # Upload the tests logs as artifacts in a .txt file
       - name: Upload Logs
@@ -57,6 +59,7 @@ jobs:
       # Upload metrics logs as artifact
       - name: Upload Metrics Logs
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: metrics_logs
           path: metrics_logs.txt
@@ -64,6 +67,7 @@ jobs:
       # Upload metrics as artifacts
       - name: Upload Metrics
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: metrics
           path: evaluation_results.json
@@ -71,6 +75,7 @@ jobs:
   ai_analysis:
     runs-on: ubuntu-latest
     needs: [tests, model_pipeline]
+    if: always()
 
     steps:
       # Checkout the repo
@@ -91,18 +96,21 @@ jobs:
       # Download the previously stored evaluation metrics artifact
       - name: Download Evaluation Metrics
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: metrics
 
       # Download the previously stored metrics logs artifact
       - name: Download Metrics Logs
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: metrics_logs
 
       # Download the previously stored tests logs artifact
       - name: Download Tests Logs
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: tests_logs
 
@@ -137,6 +145,7 @@ jobs:
   ai_summary:
     runs-on: ubuntu-latest
     needs: [ai_analysis]
+    if: always()
 
     steps:
       # Checkout the repo
@@ -153,12 +162,14 @@ jobs:
       # Load metrics analysis report
       - name: Load Metrics Analysis
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: metrics_analysis_result
 
       # Load tests analysis report
       - name: Load Tests Analysis
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: tests_analysis_result
 
