@@ -112,6 +112,8 @@ When the streamlit app is run, the available models are loaded automatically and
 
 ## Running the app in the Docker
 
+This is how you can run the app using Docker:
+
 ```
 docker build --no-cache -t diabetes-app .
 docker run -p 8501:8501 diabetes-app
