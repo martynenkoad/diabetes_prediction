@@ -72,6 +72,14 @@ jobs:
           name: metrics
           path: evaluation_results.json
 
+      # Uploads the .pkl files of the trained models
+      - name: Upload Trained Models
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: trained-models
+          path: models/
+
   ai_analysis:
     runs-on: ubuntu-latest
     needs: [tests, model_pipeline]
@@ -195,15 +203,27 @@ jobs:
       needs.model_pipeline.result == 'success'
 
     steps:
+      # Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Download the .pkl files of the models trained
+      # during the model_pipeline stage
+      - name: Download Trained Models
+        uses: actions/download-artifact@v4
+        with:
+          name: trained-models
+          path: models/
+
+      # Builds the Docker image
       - name: Build Docker Image
         run: docker build -t diabetes-prediction-app .
 
+      # Saves the Docker image
       - name: Save Docker Image
         run: docker save diabetes-prediction-app -o diabetes-prediction-app.tar
 
+      # Uploads the Docker image as artifact
       - name: Upload Docker Image
         uses: actions/upload-artifact@v4
         with:
