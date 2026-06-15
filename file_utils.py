@@ -1,3 +1,4 @@
+import os
 import pickle
 
 def save_model(model, filename="model", folder="models", mimetype="pkl"):
@@ -9,5 +10,9 @@ def save_model(model, filename="model", folder="models", mimetype="pkl"):
     :param mimetype: Mimetype which should be applied to the model file. Default is 'pkl'
     :return: Nothing
     """
+
+    # Create a folder if it does not exist yet
+    os.makedirs(folder, exist_ok=True)
+
     with open(f"{folder}/{filename}.{mimetype}", 'wb') as f:
         pickle.dump(model, f)
