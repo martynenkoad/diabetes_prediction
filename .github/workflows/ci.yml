@@ -81,7 +81,7 @@ jobs:
           path: models/
 
 
-  ai_tests-analysis:
+  ai_tests_analysis:
     runs-on: ubuntu-latest
     needs: [ tests ]
     if: always()
