@@ -54,7 +54,7 @@ jobs:
 
       # Train & evaluate the models
       - name: Train & Evaluate Models
-        run: python main.py -train-models -evaluate-models -use-best-params > metrics_logs.txt
+        run: python main.py -train-models -save-models -evaluate-models -use-best-params > metrics_logs.txt
 
       # Upload metrics logs as artifact
       - name: Upload Metrics Logs
@@ -80,40 +80,20 @@ jobs:
           name: trained-models
           path: models/
 
-  ai_analysis:
+
+  ai_tests-analysis:
     runs-on: ubuntu-latest
-    needs: [tests, model_pipeline]
+    needs: [ tests ]
     if: always()
 
     steps:
-      # Checkout the repo
+      # Clone repository on the linux machine
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Setup Python
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: 'pip'
-
-      # Install the Gemini SDK
-      - name: Install Gemini SDK
-        run: pip install google-genai
-
-      # Download the previously stored evaluation metrics artifact
-      - name: Download Evaluation Metrics
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          name: metrics
-
-      # Download the previously stored metrics logs artifact
-      - name: Download Metrics Logs
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          name: metrics_logs
+      # Setup Gemini SDK
+      - name: Setup Gemini SDK
+        uses: ./.github/actions/gemini-sdk-setup
 
       # Download the previously stored tests logs artifact
       - name: Download Tests Logs
@@ -121,20 +101,6 @@ jobs:
         continue-on-error: true
         with:
           name: tests_logs
-
-      # Make a call to the Gemini API with the Gemini API key and evaluation metrics
-      # in order to obtain the metrics analysis
-      - name: Analyze Metrics
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python scripts/gemini_analyze_metrics.py > metrics_analysis_result.txt
-
-      # Upload metrics analysis result as artifact
-      - name: Upload Metrics Analysis Result
-        uses: actions/upload-artifact@v4
-        with:
-          name: metrics_analysis_result
-          path: metrics_analysis_result.txt
 
       # Make a call to the Gemini API with the Gemini API key and tests logs
       # in order to obtain the tests logs analysis
@@ -150,9 +116,52 @@ jobs:
           name: tests_analysis_result
           path: tests_analysis_result.txt
 
+  ai_metrics_analysis:
+    runs-on: ubuntu-latest
+    needs: [model_pipeline]
+    if: always()
+
+    steps:
+      # Clone repository on the linux machine
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Setup Gemini SDK
+      - name: Setup Gemini SDK
+        uses: ./.github/actions/gemini-sdk-setup
+
+      # Download the previously stored evaluation metrics artifact
+      - name: Download Evaluation Metrics
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: metrics
+
+      # Download the previously stored metrics logs artifact
+      - name: Download Metrics Logs
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: metrics_logs
+
+      # Make a call to the Gemini API with the Gemini API key and evaluation metrics
+      # in order to obtain the metrics analysis
+      - name: Analyze Metrics
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/gemini_analyze_metrics.py > metrics_analysis_result.txt
+
+      # Upload metrics analysis result as artifact
+      - name: Upload Metrics Analysis Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: metrics_analysis_result
+          path: metrics_analysis_result.txt
+
+
   ai_summary:
     runs-on: ubuntu-latest
-    needs: [ai_analysis]
+    needs: [ai_metrics_analysis, ai_tests_analysis]
     if: always()
 
     steps:

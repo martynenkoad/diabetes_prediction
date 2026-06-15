@@ -1,0 +1,23 @@
+name: Gemini SDK Setup
+
+description: Setup Python and install Gemini SDK
+
+runs:
+  using: composite
+
+  steps:
+      # Checkout the repo
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Setup Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      # Install the Gemini SDK
+      - name: Install Gemini SDK
+        shell: bash
+        run: pip install google-genai
